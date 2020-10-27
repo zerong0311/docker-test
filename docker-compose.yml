@@ -1,0 +1,25 @@
+version: '3.6'
+
+services:
+  lala-node:
+    build: ./nodejs
+    environment:
+      NODE_ENV: production
+      HOST: lala-db
+      DBUSER: root
+      DBPASSWORD: dbpassword
+      DB: LALAMOVE
+    ports:
+      - 3000:8080
+
+  lala-db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_PASSWORD: dbpassword
+      MYSQL_ROOT_PASSWORD: dbpassword
+    ports:
+      - 3306:3306
+    volumes:
+    - ./data/:/docker-entrypoint-initdb.d
+    - ./db/:/var/lib/mysql

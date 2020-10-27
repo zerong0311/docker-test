@@ -1,0 +1,1 @@
+docker run --name mysql -v /Users/zero/Documents/lalamove/docker/db/config/my.cnf:/etc/mysql/my.cnf -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql
