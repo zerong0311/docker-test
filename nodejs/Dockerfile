@@ -4,7 +4,8 @@ FROM node:latest
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY package.json /usr/src/app/
+COPY /nodejs/package.json /usr/src/app/
+RUN npm install
 RUN yarn install && yarn cache clean
 
 # Bundle app source
