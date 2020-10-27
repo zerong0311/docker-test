@@ -1,5 +1,5 @@
 module.exports = {
-    HOST: process.env.HOST || "www.db4free.net" ,
+    HOST: process.env.HOST || 'db' ,
     USER: process.env.DBUSER || "zerongjob",
     PASSWORD: process.env.DBPASSWORD || "12345678",
     DB: process.env.DB ||  "zerongjob",
