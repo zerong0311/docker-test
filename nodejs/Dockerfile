@@ -9,7 +9,7 @@ RUN npm install
 RUN yarn install && yarn cache clean
 
 # Bundle app source
-COPY . /usr/src/app
+COPY /nodejs /usr/src/app
 
 # Declaring PROT in containers
 EXPOSE 8080
