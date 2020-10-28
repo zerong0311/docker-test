@@ -8,7 +8,7 @@ exports.createOrder = async (req, res) => {
     const inputArrayLength = 2;
     // Validate request
     if(!req.body.origin || !req.body.destination){
-        res.sendStatus(400).send({"error": "data not provided"});
+        res.status(400).send({"error": "data not provided"});
         return;
     }
     let isInputDataValid = true;
@@ -20,7 +20,7 @@ exports.createOrder = async (req, res) => {
     });
 
     if(!isInputDataValid){
-        res.sendStatus(400).send({"error": "data invalid"});
+        res.status(400).send({"error": "data invalid"});
         return;
     }
 
@@ -48,7 +48,7 @@ exports.createOrder = async (req, res) => {
             throw new Error('API endpoint does not contain distance value')
     }catch(err){
         console.log(`fetch distance error ${err.toString()}`)
-        res.sendStatus(500).send({"error": "Error to get distance"});
+        res.status(500).send({"error": "Error to get distance"});
         return;
     }
     
@@ -58,7 +58,7 @@ exports.createOrder = async (req, res) => {
     Order.create(data)
     .then(result => {
         console.log(`Order insertd ${result.order_id}`)
-        res.sendStatus(200).send({
+        res.status(200).send({
                 "id": result.order_id,
                 "distance": result.distance,
                 "status": orderStatus.toString(result.order_status)
@@ -66,7 +66,7 @@ exports.createOrder = async (req, res) => {
     })
     .catch(err => {
         console.log(`db fail ${err.toString()}`);
-        res.sendStatus(500).send({"error":"DB insert fail"});
+        res.status(500).send({"error":"DB insert fail"});
         return;
     });
 };
@@ -74,17 +74,17 @@ exports.createOrder = async (req, res) => {
 // Retrieve all Orders from the database Limit by pages&limit
 exports.getList = (req, res) => {
   if(!req.query.page || !req.query.limit){
-    res.sendStatus(400).send({"error": "data not provided"});
+    res.status(400).send({"error": "data not provided"});
     return;
   }
 
   if(isNaN(req.query.page)|| isNaN(req.query.limit)){
-    res.sendStatus(400).send({"error": "data invalid"});
+    res.status(400).send({"error": "data invalid"});
     return;
   }
 
   if(parseInt(req.query.page)<=0 || parseInt(req.query.limit)<=0){
-    res.sendStatus(400).send({"error": "data invalid"});
+    res.status(400).send({"error": "data invalid"});
     return;
   }
 
@@ -97,13 +97,13 @@ exports.getList = (req, res) => {
     attributes: ['order_id','distance','order_status']
   })
     .then(data => {
-      res.sendStatus(200).send( data.map(row=>{ 
+      res.status(200).send( data.map(row=>{ 
         row.order_status = orderStatus.toString(row.order_status);
         return row;
     }));
     })
     .catch(err => {
-      res.sendStatus(500).send({"error": "db error"});
+      res.status(500).send({"error": "db error"});
     });
 };
 
@@ -127,7 +127,7 @@ exports.update = (req, res) => {
       }
     })
     .catch(err => {
-      res.sendStatus(500).send({
+      res.status(500).send({
         message: "Error updating Tutorial with id=" + id
       });
     });
