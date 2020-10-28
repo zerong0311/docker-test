@@ -18,12 +18,13 @@ app.use('/', orderRoutes);
 
 
 // handle undefined Routes
-app.use('*', (req, res, next) => {
-    res.status(404);
-    // const err = new AppError(404, 'fail', 'undefined route');
-    // next(err, req, res, next);
+app.get('*', function(req, res){
+  res.status(404).end({"error":'Not found'});
 });
 
+app.get('/error', (req, res) => {
+  res.status(500).send({"error":'Internal server error'});
+})
 
 
 // app.use(globalErrHandler);
