@@ -103,6 +103,7 @@ exports.getList = (req, res) => {
     }));
     })
     .catch(err => {
+      console.log(`db error ${err.toString()}`);
       res.status(500).send({"error": "db error"});
     });
 };
