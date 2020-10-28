@@ -19,7 +19,7 @@ app.use('/', orderRoutes);
 
 // handle undefined Routes
 app.use('*', (req, res, next) => {
-    res.send(404);
+    res.sendStatus(404);
     // const err = new AppError(404, 'fail', 'undefined route');
     // next(err, req, res, next);
 });
