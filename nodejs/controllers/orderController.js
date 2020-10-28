@@ -55,7 +55,7 @@ exports.createOrder = async (req, res) => {
     locationData.distance = responseJson.rows[0].elements[0].distance.value;    //set distance value to data object for insert to DB
 
     // Save Order & distance in the database
-    Order.create(data)
+    Order.create(locationData)
     .then(result => {
         console.log(`Order insertd ${result.order_id}`)
         res.status(200).send({
