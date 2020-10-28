@@ -19,7 +19,7 @@ app.use('/', orderRoutes);
 
 // handle undefined Routes
 app.get('*', function(req, res){
-  res.status(404).end({"error":'Not found'});
+  res.status(404).send({"error":'Not found'});
 });
 
 app.get('/error', (req, res) => {
