@@ -131,7 +131,7 @@ exports.takeOrder = async (req, res) => {
       res.status(400).send({"error": "order not found"})
     }
 
-    switch(data.order_status){
+    switch(findResult.order_status){
       case orderStatus.ENUM.UNASSIGN:
             let result = await Order.update({order_status:orderStatus.ENUM.TAKEN},{where:{order_id:order_id}})
             console.log(result);
