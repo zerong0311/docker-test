@@ -14,7 +14,7 @@ router.post('/orders',orderController.createOrder)
 
 router.get('/orders',orderController.getList);
 
-router.post('/orders/:id',orderController.takeOrder);
+router.patch('/orders/:id',orderController.takeOrder);
 
 
 

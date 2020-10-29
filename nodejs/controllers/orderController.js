@@ -15,8 +15,10 @@ exports.createOrder = async (req, res) => {
     [req.body.origin,req.body.destination].forEach(elements=>{
         if(!Array.isArray(elements)) isInputDataValid = false;                          //is array
         if(elements.length !== inputArrayLength ) isInputDataValid = false;             //array length
-        for(let cur = 0;cur<inputArrayLength;cur++)
-            if(typeof(elements[cur])!=='string') isInputDataValid = false;                  //array elements type
+        for(let cur = 0;cur<inputArrayLength;cur++){
+            if(typeof(elements[cur])!=='string') isInputDataValid = false;             //array elements == string
+            if(isNaN(elements[cur])) isInputDataValid = false;                  //array elements is NOT A NUMBER
+        }
     });
 
     if(!isInputDataValid){
@@ -119,9 +121,12 @@ exports.takeOrder = async (req, res) => {
     res.status(400).send({"error": "data invalid"});
     return;
   }
+  if(!req.body.status || req.body.status!=='TAKEN'){
+    res.status(400).send({"error": "data invalid"});
+    return;
+  }
+  
   const order_id = req.params.id;
-
-
   try{
     let findResult = await Order.findOne({
       where:{order_id:order_id}
