@@ -1,7 +1,12 @@
 language: node_js
-before_script: cd nodejs
+
 node_js:
     - "9"
     - "8"
     - "7"
     - "6"
+before_install: cd nodejs
+install:
+    - npm install
+script:
+    - npm run dev
