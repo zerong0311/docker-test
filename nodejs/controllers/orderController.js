@@ -54,25 +54,26 @@ exports.createOrder = async (req, res) => {
     
     locationData.distance = responseJson.rows[0].elements[0].distance.value;    //set distance value to data object for insert to DB
 
-    // Save Order & distance in the database
-    Order.create(locationData)
-    .then(result => {
-        console.log(`Order insertd ${result.order_id}`)
-        res.status(200).send({
-                "id": result.order_id,
-                "distance": result.distance,
-                "status": orderStatus.toString(result.order_status)
-        })
-    })
-    .catch(err => {
-        console.log(`db fail ${err.toString()}`);
+    try{
+      let createResult = await Order.create(locationData);
+      console.log(`Order insertId ${createResult.order_id}`)
+      res.status(200).send({
+              "id": createResult.order_id,
+              "distance": createResult.distance,
+              "status": orderStatus.toString(createResult.order_status)
+      })
+      return;
+
+    }catch(err){
+      console.log(`db fail ${err.toString()}`);
         res.status(500).send({"error":"DB insert fail"});
         return;
-    });
+    }
+
 };
 
 // Retrieve all Orders from the database Limit by pages&limit
-exports.getList = (req, res) => {
+exports.getList = async (req, res) => {
   if(!req.query.page || !req.query.limit){
     res.status(400).send({"error": "data not provided"});
     return;
@@ -91,45 +92,65 @@ exports.getList = (req, res) => {
   const limit = parseInt(req.query.limit);
   const offset = parseInt(req.query.limit)*(parseInt(req.query.page)-1);
   console.log(`select with limit ${limit} offset ${offset}`)
-  Order.findAll({
-    limit : limit,
-    offset : offset,
-    attributes: ['order_id','distance','order_status']
-  })
-    .then(data => {
-      res.status(200).send( data.map(row=>{ 
-        row.order_status = orderStatus.toString(row.order_status);
-        return row;
-    }));
+
+  try{
+    let findResult = await Order.findAll({
+      limit : limit,
+      offset : offset,
+      attributes: ['order_id','distance','order_status']
     })
-    .catch(err => {
-      console.log(`db error ${err.toString()}`);
-      res.status(500).send({"error": "db error"});
-    });
+
+    res.status(200).send( findResult.map(row=>{ 
+      row.order_status = orderStatus.toString(row.order_status);
+      return row;
+    }));
+    
+
+  }catch(err){
+    console.log(`db error ${err.toString()}`);
+    res.status(500).send({"error": "db error"});
+  }
 };
 
 
 // Update a Tutorial by the id in the request
-exports.update = (req, res) => {
-  const id = req.params.id;
+exports.takeOrder = async (req, res) => {
+  if(!req.params.id || isNaN(req.params.id)){
+    res.status(400).send({"error": "data invalid"});
+    return;
+  }
+  const order_id = req.params.id;
 
-  Tutorial.update(req.body, {
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: "Tutorial was updated successfully."
-        });
-      } else {
-        res.send({
-          message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`
-        });
-      }
+
+  try{
+    let findResult = await Order.findOne({
+      where:{order_id:order_id}
     })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating Tutorial with id=" + id
-      });
-    });
+    
+    if(findResult===null){
+      res.status(400).send({"error": "order not found"})
+    }
+
+    switch(data.order_status){
+      case orderStatus.ENUM.UNASSIGN:
+            let result = await Order.update({order_status:orderStatus.ENUM.TAKEN},{where:{order_id:order_id}})
+            console.log(result);
+            res.status(200).send({"status": "SUCCESS"})
+          break;
+        case orderStatus.ENUM.TAKEN:
+          res.status(400).send({"error": "order already taken"});
+          return;
+          break;
+        case orderStatus.ENUM.OTHERS:
+          res.status(400).send({"error": "order can not take now"});
+          return;
+          break;
+    }
+    
+
+
+  }catch(err){
+    console.log(`db error ${err.toString()}`);
+    res.status(500).send({"error": "db error"});
+  };
 };

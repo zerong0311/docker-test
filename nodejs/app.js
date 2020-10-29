@@ -17,7 +17,7 @@ app.use(express.json());
 app.use('/', orderRoutes);
 
 //for testing / health check
-router.get('/ping',  (req, res) =>{
+app.get('/ping',  (req, res) =>{
   console.log(`${req.headers['x-forwarded-for'] || req.connection.remoteAddress} is pinging`);
   res.status(200).send({"success":"pong"})
 });
@@ -27,12 +27,7 @@ app.get('*', function(req, res){
   res.status(404).send({"error":'Not found'});
 });
 
-app.get('/error', (req, res) => {
-  res.status(500).send({"error":'Internal server error'});
-})
 
-
-// app.use(globalErrHandler);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

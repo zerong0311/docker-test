@@ -10,10 +10,11 @@ router.use(middleware.log);
 
 
 router.post('/orders',orderController.createOrder)
-//router.get('/orders',orderController.findOne);
+
 
 router.get('/orders',orderController.getList);
 
+router.post('/orders/:id',orderController.takeOrder);
 
 
 
