@@ -5,10 +5,11 @@ services:
     build: ./nodejs
     environment:
       NODE_ENV: production
-      HOST: lala-db
+      DBHOST: lala-db
       DBUSER: root
       DBPASSWORD: dbpassword
-      DB: LALAMOVE
+      DBNAME: LALAMOVE
+      GOOGLEMAPAPIKEY : AIzaSyClfFPTSCVamqtUP4Lj4RQ93RtcIbVWNwk
     ports:
       - 3000:8080
 
