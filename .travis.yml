@@ -1,12 +1,11 @@
 language: node_js
 
 node_js:
-    - "15"
     - "14"
 before_install: cd nodejs
 install:
     - npm install
 after_success:
-- docker login --username=$DOCKERUSER --password=$DOCKERPASSWORD dockerhub
+- docker login --username=$DOCKERUSER --password-stdin=$DOCKERPASSWORD
 - docker build --rm -t $DOCKERUSER/$DEPLOYIMAGE
 - docker push $DOCKERUSER/$DEPLOYIMAGE:least
