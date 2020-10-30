@@ -6,6 +6,6 @@ before_install: cd nodejs
 install:
     - npm install
 after_success:
-- docker login --username=$DOCKERUSER --password-stdin=$DOCKERPASSWORD
-- docker build --rm -t $DOCKERUSER/$DEPLOYIMAGE
-- docker push $DOCKERUSER/$DEPLOYIMAGE:least
+- docker login --username="$DOCKERUSER" --password-stdin="$DOCKERPASSWORD"
+- docker build --rm -t "$DOCKERUSER"/"$DEPLOYIMAGE"
+- docker push "$DOCKERUSER"/"$DEPLOYIMAGE":least
