@@ -8,4 +8,5 @@ install:
 after_success:
 - echo "$DOCKERPASSWORD" | docker login --username="$DOCKERUSER" --password-stdin
 - docker build -t $DEPLOYIMAGE:latest .
+- docker tag $DEPLOYIMAGE $DOCKERUSER/$DEPLOYIMAGE
 - docker push $DOCKERUSER/$DEPLOYIMAGE:latest
