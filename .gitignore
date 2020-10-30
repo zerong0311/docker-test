@@ -1,3 +1,4 @@
 nodejs/node_modules/**
+nodejs/.nyc_output/**
 test/node_modules/**
 .DS_Store
