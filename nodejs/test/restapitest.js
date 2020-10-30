@@ -1,7 +1,10 @@
 const { expect } = require('chai');
 const supertest = require('supertest');
-const api = supertest('node-load-balancer-1379515656.ap-northeast-1.elb.amazonaws.com:8080'); 
-const app = require('../app.js');
+// const api = supertest('node-load-balancer-1379515656.ap-northeast-1.elb.amazonaws.com:8080'); 
+const api = supertest('localhos:8080'); 
+
+
+
     // template of success data 
     // {
     //     'origin': ['-33.86748','151.20699'],
