@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const supertest = require('supertest');
 const api = supertest('node-load-balancer-1379515656.ap-northeast-1.elb.amazonaws.com:8080'); 
-
+const app = require('../app.js');
     // template of success data 
     // {
     //     'origin': ['-33.86748','151.20699'],
@@ -47,7 +47,7 @@ describe('/orders POST with wrong origin & correct destination- create order', (
   
   });
 
-  describe('/orders POST with correct origin & wrong destination- create order', () => {
+describe('/orders POST with correct origin & wrong destination- create order', () => {
     it("origin array is not String", (done) => {
       api.post("/orders").send( {"origin":["-32.86748","150.20699"],"destination":["abc",123]} ).expect(400).end((err, res) => {err ? done(err) :done();});
     });
@@ -91,6 +91,11 @@ describe('/orders POST with correct origin & correct destination - create order'
         api.post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200).end((err, res) => {
             err ? done(err) :done();});
     });
+
+    it("correct origin & destination", (done) => {
+        api.post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200).end((err, res) => {
+            err ? done(err) :done();});
+    });
 });
 
 
@@ -118,6 +123,40 @@ describe('/orders GET - orderlist', () => {
 
     it("correct page number and limit contain decimal", (done) => {
         api.get("/orders?page=1&limit=1.2").send().expect(200).end((err, res) => {err ? done(err) :done();});
+    });
+    
+    it("correct page number and limit very large", (done) => {
+        api.get("/orders?page=1&limit=987654321").send().expect(200).end((err, res) => {err ? done(err) :done();});
+    });
+
+
+
+    it("no page number and correct limit", (done) => {
+        api.get("/orders?limit=1").send().expect(400).end((err, res) => {err ? done(err) :done();});
+      });
+  
+      it("no value of page number and correct limit", (done) => {
+          api.get("/orders?page=&limit=1").send().expect(400).end((err, res) => {err ? done(err) :done();});
+      });
+  
+      it("a string of page number and correct limit", (done) => {
+        api.get("/orders?page=abc&limit=1").send().expect(400).end((err, res) => {err ? done(err) :done();});
+      });
+  
+      it("a symbol of page number and correct limit", (done) => {
+        api.get("/orders?page=!(*&^&limit=1").send().expect(400).end((err, res) => {err ? done(err) :done();});
+      });
+  
+      it("page number<=0 and correct limit", (done) => {
+          api.get("/orders?page=-1&limit=1").send().expect(400).end((err, res) => {err ? done(err) :done();});
+      });
+  
+      it("correct page number contain decimal and correct limit", (done) => {
+          api.get("/orders?page=1&limit=1.2").send().expect(200).end((err, res) => {err ? done(err) :done();});
+      });
+
+      it("large page number and correct limit", (done) => {
+        api.get("/orders?page=98765432&limit=10").send().expect(200).end((err, res) => {err ? done(err) :done();});
     });
 
 });
