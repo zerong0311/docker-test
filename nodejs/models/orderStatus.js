@@ -6,7 +6,6 @@ const orderStatus = {
     },
     toString: function(num){
         for (var k in orderStatus.ENUM) {
-            console.log(`orderStatus.toString ${orderStatus.ENUM[k]}  ${num}  ${orderStatus.ENUM[k] == num}`)
             if (orderStatus.ENUM[k] == num)
                 return k;
         }
