@@ -17,7 +17,7 @@
     "supertest": "^6.0.0"
   },
   "scripts": {
-    "test": "env GOOGLEMAPAPIKEY=AIzaSyClfFPTSCVamqtUP4Lj4RQ93RtcIbVWNwk DBHOST=mydbinstance.cyrmt910qp5q.ap-northeast-1.rds.amazonaws.com DBNAME=LALAMOVE DBPASSWORD=dbpassword DBUSER=root mocha test/restapitest.js --exit",
+    "test": "env GOOGLEMAPAPIKEY=AIzaSyClfFPTSCVamqtUP4Lj4RQ93RtcIbVWNwk DBHOST=mydbinstance.cyrmt910qp5q.ap-northeast-1.rds.amazonaws.com DBNAME=LALAMOVE DBPASSWORD=dbpassword DBUSER=root mocha test/restapitest.js --exit --timeout 5000",
     "start": "node app.js",
     "dev": "set GOOGLEMAPAPIKEY=AIzaSyClfFPTSCVamqtUP4Lj4RQ93RtcIbVWNwk && node app.js"
   },
