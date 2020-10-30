@@ -9,11 +9,8 @@ const middleware = require('../middleware/middleware.js');
 router.use(middleware.log);
 
 
-router.post('/orders',orderController.createOrder)
-
-
+router.post('/orders',orderController.createOrder);
 router.get('/orders',orderController.getList);
-
 router.patch('/orders/:id',orderController.takeOrder);
 
 
