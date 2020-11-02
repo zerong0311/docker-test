@@ -1,7 +1,8 @@
 const db = require('../models')
-const Order = db.Order
+const Order = db.order;
 const orderService = {
     findOne :async (orderID)=>{
+        console.log(`finding with ${orderID}`);
         const findOneResult = await Order.findOne({
             where:{order_id:orderID}
         });

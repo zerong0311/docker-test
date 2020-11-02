@@ -112,7 +112,8 @@ exports.getList = async (req, res) => {
     const offset = parseInt(req.query.limit)*(parseInt(req.query.page)-1);
     console.log(`select with limit ${limit} offset ${offset}`)
 
-    let findResult = OrderService.findAll(limit,offset);
+    let findResult = await OrderService.findAll(limit,offset);
+    console.log(`findResult ${findResult}`);
     res.status(200).send( findResult.map(row=>{ 
       row.order_status = orderStatus.toString(row.order_status);      //map int status => String status
       return row;
@@ -145,10 +146,7 @@ exports.takeOrder = async (req, res) => {
   //Find and update status in DB
   try{
     const order_id = req.params.id;
-    let findResult = await Order.findOne({
-      where:{order_id:order_id}
-    })
-    
+    let findResult = await OrderService.findOne(order_id)
     if(findResult===null){
       console.log(`orderID ${order_id} not found in db`);
       res.status(400).send({"error": "order not found"})
@@ -156,7 +154,7 @@ exports.takeOrder = async (req, res) => {
 
     switch(findResult.order_status){
       case orderStatus.ENUM.UNASSIGN:
-            let updateResult = await Order.update({order_status:orderStatus.ENUM.TAKEN},{where:{order_id:order_id}})
+            let updateResult = await OrderService.update({order_status:orderStatus.ENUM.TAKEN},{where:{order_id:order_id}})
             console.log(`updated order status to ${updateResult}`);
             res.status(200).send({"status": "SUCCESS"})
           break;
