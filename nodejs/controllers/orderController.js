@@ -32,7 +32,7 @@ exports.createOrder = async (req, res) => {
 
 
     //get distance From Google MAP API
-    const distance = undefined;
+    let distance = undefined;
     try{
         let locationData = {
             START_LATITUDE : req.body.origin[0],
