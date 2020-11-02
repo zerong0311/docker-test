@@ -61,7 +61,7 @@ exports.createOrder = async (req, res) => {
 
     // insert Data To DB
     try{
-      const createResult = OrderService.createOrder(
+      const createResult = OrderService.create(
         START_LATITUDE,
         START_LONGITUDE,
         END_LATITUDE,
