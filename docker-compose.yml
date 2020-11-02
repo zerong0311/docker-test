@@ -1,8 +1,8 @@
 version: '3.6'
 
 services:
-  lala-node:
-    build: ./nodejs
+  nodejs:
+    image: zerongjob/docket-test:latest
     environment:
       NODE_ENV: production
       DBHOST: lala-db
@@ -11,7 +11,7 @@ services:
       DBNAME: LALAMOVE
       GOOGLEMAPAPIKEY : AIzaSyClfFPTSCVamqtUP4Lj4RQ93RtcIbVWNwk
     ports:
-      - 3000:8080
+      - 8080:8080
 
   lala-db:
     image: mysql:5.7
