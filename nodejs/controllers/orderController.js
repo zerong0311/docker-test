@@ -29,18 +29,20 @@ exports.createOrder = async (req, res) => {
     }catch(err){
       res.status(500).send({"error":"data validation error"})
     }
-
+    let START_LATITUDE = req.body.origin[0],
+    START_LONGITUDE = req.body.origin[1],
+    END_LATITUDE = req.body.destination[0],
+    END_LONGITUDE = req.body.destination[1];
 
     //get distance From Google MAP API
     let distance = undefined;
     try{
-        let locationData = {
-            START_LATITUDE : req.body.origin[0],
-            START_LONGITUDE : req.body.origin[1],
-            END_LATITUDE : req.body.destination[0],
-            END_LONGITUDE : req.body.destination[1],
-        }
-        const response = await googleMapAPI.requestDistance(locationData);    //wait for the fetch distance result
+        const response = await googleMapAPI.requestDistance({ 
+            START_LATITUDE : START_LATITUDE,
+            START_LONGITUDE : START_LONGITUDE,
+            END_LATITUDE : END_LATITUDE,
+            END_LONGITUDE : END_LONGITUDE,
+          });    //wait for the fetch distance result
         if(!response.ok)                                                       //http response checking
             throw new Error('request fail');
 
@@ -60,10 +62,10 @@ exports.createOrder = async (req, res) => {
     // insert Data To DB
     try{
       const createResult = OrderService.createOrder(
-        locationData.START_LATITUDE,
-        locationData.START_LONGITUDE,
-        locationData.END_LATITUDE,
-        locationData.END_LONGITUDE,
+        START_LATITUDE,
+        START_LONGITUDE,
+        END_LATITUDE,
+        END_LONGITUDE,
         distance
         );
         
