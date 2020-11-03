@@ -4,6 +4,7 @@ const supertest = require('supertest');
 const api = supertest('localhos:8080'); 
 const app = require('../app.js');
 const e = require('express');
+const { json } = require('body-parser');
 
 
 // template of success data 
@@ -172,36 +173,59 @@ describe('GET/orders?page=:page&limit=:limit', () => {
 
 
 
-describe('create order=>get order=>take order=>get order', async () => {
-    let orderId;
-    await it("create order", (done) => {
-        supertest(app).post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200).end((err, res) => {
-            if(err) done(err);
-            else{
-                console.log(`res.text ${res.text}`);
-                orderId = res.text.id;    
-                done();       
-            }
-        });
+describe('create order=>get order=>take order=>get order', () => {
+    var orderId;
+
+    it(`craete data`,async ()=>{
+        const createOrderResp = await supertest(app).post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200);
+        if(JSON.parse(createOrderResp.res.text).id)
+            orderId = JSON.parse(createOrderResp.res.text).id;
+        else
+            throw `no id found in ${JSON.parse(createOrderResp.res.text)}`;
     });
 
-    await it(`select top 1000 data`, (done) => {
-        supertest(app).get("/orders?page=1&limit=100").send().expect(200).end((err, res) => {
-            if(err) done(err);
-            else{
-                console.log(`top1000 ${res.text}`);
-                done();
-            }
-        });
+    it(`find the orderid - ${orderId} in list with UNASSIGN status`, async() => {
+        const searchOrderResp= await supertest(app).get("/orders?page=1&limit=1000").send().expect(200);
+        let result = undefined;
+        let jsonResponse = JSON.parse(searchOrderResp.res.text);
+        
+        for(var key in jsonResponse){
+            if (!jsonResponse.hasOwnProperty(key)) continue;
+            var obj = jsonResponse[key];
+            if(obj.order_id === orderId && obj.order_status==='UNASSIGN')   //confirm order found && status=assign
+                result=obj;
+        }
+
+        if(result === undefined) {
+            throw(`${orderId} not found or order_status !== UNASSIGN`);
+        }
     });
 
-    await it(`take order`, (done) => {
-        supertest(app).patch(`/orders/${orderId}`).send({"status":"TAKEN"}).expect(200).end((err, res) => {
-            if(err) done(err);
-            else{
-                console.log(`take order ${res.text}`);
-                done();
-            }
-        });
+
+
+    it(`take order with /orders/${orderId}`, async () => {
+        const takeOrderResp = await supertest(app).patch(`/orders/${orderId}`).send({"status":"TAKEN"}).expect(200);
+        console.log(takeOrderResp.res.text);
+        if(JSON.parse(takeOrderResp.res.text).status !== "SUCCESS")
+            throw `fail to take order`;
+    });
+
+
+
+    it(`find the orderid - ${orderId} in list with TAKEN status`, async() => {
+        const searchOrderResp= await supertest(app).get("/orders?page=1&limit=1000").send().expect(200);
+        let result = undefined;
+        let jsonResponse = JSON.parse(searchOrderResp.res.text);
+        
+        for(var key in jsonResponse){
+            if (!jsonResponse.hasOwnProperty(key)) continue;
+            var obj = jsonResponse[key];
+            if(obj.order_id === orderId && obj.order_status==='TAKEN')   //confirm order found && status=assign
+                result=obj;
+        }
+
+        if(result === undefined) {
+            throw(`${orderId} not found or order_status !== TAKEN`);
+        }
     });
 });

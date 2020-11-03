@@ -21,7 +21,6 @@ async function requestDistance(START_LATITUDE,START_LONGITUDE,END_LATITUDE,END_L
             if (!elements.hasOwnProperty(key)) continue;
             var obj = elements[key];
             obj.forEach(valueInElements => {
-                console.log(valueInElements);
                 if(valueInElements.status === 'OK')
                 returnResult.push(valueInElements.distance.value);
             });
