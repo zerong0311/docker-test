@@ -172,6 +172,7 @@ describe('create order=>get order=>take order=>get order', () => {
     it("correct origin & destination 1", (done) => {
         supertest(app).post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200).end((err, res) => {
             if(err) done(err);
+            console.log(`res.text ${res.text}`);
             let orderId = res.text[id];           
 
             it(`select data form get order include orderid=${orderId}`, (done) => {
