@@ -160,7 +160,10 @@ describe('GET/orders?page=:page&limit=:limit', () => {
       });
 
       it("large page number and correct limit", (done) => {
-        supertest(app).get("/orders?page=98765432&limit=10").send().expect(200).end((err, res) => {err ? done(err) :done();});
+        supertest(app).get("/orders?page=98765432&limit=10").send().expect(200).end((err, res) => {
+            if(err) done(err);
+            console.log(`res.text  ${res.text}`);
+            done();});
     });
 
 });
@@ -180,6 +183,7 @@ describe('create order=>get order=>take order=>get order', () => {
                     if(err) done(err);
 
                     console.log(`getlist ${res.text}`);
+                    done();
                 });
             });
         });
