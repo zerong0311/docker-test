@@ -105,7 +105,6 @@ exports.getList = async (req, res) => {
     console.log(`select with limit ${limit} offset ${offset}`)
 
     let findResult = await OrderService.findAll(limit,offset);
-    console.log(`findResult ${findResult}`);
     res.status(200).send( findResult.map(row=>{ 
       row.order_status = orderStatus.toString(row.order_status);      //map int status => String status
       return row;
