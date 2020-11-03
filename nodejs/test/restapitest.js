@@ -169,7 +169,6 @@ describe('GET/orders?page=:page&limit=:limit', () => {
 
 
 describe('create order=>get order=>take order=>get order', () => {
-    this.timeout(60000);
     it("create order", (done) => {
         supertest(app).post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200).end((err, res) => {
             if(err) done(err);
