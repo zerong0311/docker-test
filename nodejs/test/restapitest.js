@@ -13,7 +13,7 @@ const app = require('../app.js');
 
 
 
-describe('/orders POST with wrong origin & correct destination- create order', () => {
+describe('POST /orders fail to create order - wrong origin', () => {
       it("origin array is not String", (done) => {
         supertest(app).post("/orders").send( {"origin":["abc",123],"destination":["-32.86748","150.20699"]} ).expect(400).end((err, res) => {err ? done(err) :done();});
       });
@@ -52,7 +52,7 @@ describe('/orders POST with wrong origin & correct destination- create order', (
   
   });
 
-describe('/orders POST with correct origin & wrong destination- create order', () => {
+describe('POST /orders fail to create order - wrong destination', () => {
     it("origin array is not String", (done) => {
       supertest(app).post("/orders").send( {"origin":["-32.86748","150.20699"],"destination":["abc",123]} ).expect(400).end((err, res) => {err ? done(err) :done();});
     });
@@ -91,7 +91,7 @@ describe('/orders POST with correct origin & wrong destination- create order', (
 
 });
 
-describe('/orders POST with correct origin & correct destination - create order', () => {
+describe('POST /orders success create order', () => {
     it("correct origin & destination 1", (done) => {
         supertest(app).post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200).end((err, res) => {
             err ? done(err) :done();});
@@ -103,9 +103,8 @@ describe('/orders POST with correct origin & correct destination - create order'
     });
 });
 
-
 ///orders?page=:page&limit=:limit
-describe('/orders GET - orderlist', () => {
+describe('GET/orders?page=:page&limit=:limit', () => {
     it("correct page number and no limit", (done) => {
       supertest(app).get("/orders?page=1").send().expect(400).end((err, res) => {err ? done(err) :done();});
     });
@@ -167,3 +166,19 @@ describe('/orders GET - orderlist', () => {
 });
 
 
+
+
+describe('create order=>get order=>take order=>get order', () => {
+    it("correct origin & destination 1", (done) => {
+        supertest(app).post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200).end((err, res) => {
+            if(err) done(err);
+            console.log(res);
+            
+        
+        
+        
+        });
+
+            
+    });
+});

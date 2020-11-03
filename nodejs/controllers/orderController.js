@@ -1,8 +1,6 @@
-const db = require("../models");
 const OrderService = require("../service/orderService.js");
-const Op = db.Sequelize.Op;
 const googleMapAPI = require("../controllers/googleMapAPI.js");
-const orderStatus = require("../models/orderStatus.js")
+const orderStatus = require("../models/orderStatus.js");
 
 exports.createOrder = async (req, res) => {
   // Validate request
@@ -12,6 +10,7 @@ exports.createOrder = async (req, res) => {
           res.status(400).send({"error": "data not provided"});
           return;
       }
+
       let isInputDataValid = true;
       [req.body.origin,req.body.destination].forEach(elements=>{
           if(!Array.isArray(elements)) isInputDataValid = false;                          //is array
@@ -26,33 +25,25 @@ exports.createOrder = async (req, res) => {
           res.status(400).send({"error": "data invalid"});
           return;
       }
+
     }catch(err){
-      res.status(500).send({"error":"data validation error"})
+      console.log(`data validation error ${err.toString()}`);
+      res.status(500).send({"error":"data validation error"});
     }
+
     let START_LATITUDE = req.body.origin[0],
     START_LONGITUDE = req.body.origin[1],
     END_LATITUDE = req.body.destination[0],
-    END_LONGITUDE = req.body.destination[1];
+    END_LONGITUDE = req.body.destination[1],
+    distance = undefined;
+
 
     //get distance From Google MAP API
-    let distance = undefined;
     try{
-        const response = await googleMapAPI.requestDistance({ 
-            START_LATITUDE : START_LATITUDE,
-            START_LONGITUDE : START_LONGITUDE,
-            END_LATITUDE : END_LATITUDE,
-            END_LONGITUDE : END_LONGITUDE,
-          });    //wait for the fetch distance result
-        if(!response.ok)                                                       //http response checking
-            throw new Error('request fail');
-
-        const responseJson = await response.json();
-        console.log(`fetch response ${JSON.stringify(responseJson)}`);
-        if(responseJson.status !== 'OK' || responseJson.rows[0].elements[0].status !== 'OK')      //API endpoint status checking
-            throw new Error('API endpoint return fail');
-        if(!responseJson.rows[0].elements[0].distance.value)
-            throw new Error('API endpoint does not contain distance value')
-        distance = responseJson.rows[0].elements[0].distance.value;
+        const response = await googleMapAPI.requestDistance( START_LATITUDE,START_LONGITUDE,END_LATITUDE,END_LONGITUDE);    //wait for the fetch distance result
+        if(response.length <0)
+          throw("no suitable response found")
+        distance = response[0];                                                                                             // get first result;
     }catch(err){
         console.log(`fetch distance error ${err.toString()}`)
         res.status(500).send({"error": "Error to get distance"});
@@ -61,13 +52,12 @@ exports.createOrder = async (req, res) => {
 
     // insert Data To DB
     try{
-      const createResult = OrderService.create(
+      const createResult = await OrderService.create(
         START_LATITUDE,
         START_LONGITUDE,
         END_LATITUDE,
         END_LONGITUDE,
-        distance
-        );
+        distance);
         
       console.log(`Order insertId ${createResult.order_id}`);
       res.status(200).send({

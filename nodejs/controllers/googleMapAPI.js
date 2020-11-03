@@ -15,9 +15,7 @@ async function requestDistance(START_LATITUDE,START_LONGITUDE,END_LATITUDE,END_L
         throw new Error(`API endpoint return fail ,status != OK ${responseJson}`);
 
     let returnResult = [];
-    responseJson.rows.forEach(elements =>{                  // loop all rows result;
-        console.log(`looping elements ${elements}`)
-
+    responseJson.rows.forEach(elements =>{                      // loop all rows result to get distance value
         //make object loop as array
         for(var key in elements){
             if (!elements.hasOwnProperty(key)) continue;
@@ -25,11 +23,11 @@ async function requestDistance(START_LATITUDE,START_LONGITUDE,END_LATITUDE,END_L
             obj.forEach(valueInElements => {
                 console.log(valueInElements);
                 if(valueInElements.status === 'OK')
-                returnResult.push(value.distance.value);
+                returnResult.push(valueInElements.distance.value);
             });
         }
     })
-    console.log(returnResult);
+    console.log(`output distance ${returnResult}`);
 
     return returnResult;
 }
