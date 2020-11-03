@@ -1,14 +1,13 @@
 ## NPM command
-- npm run test
-run the unittest & integration test with mocha & supertest
-also,Travis ci will auto run this test.
+### `npm run test`
+- run the unittest & integration test with mocha & supertest
 
-- npm run dev
-run the app with environment set in command / as default
+### `npm run dev`
+- run the app with environment set in command / as default
 
-- npm run start
-officially start command for dockerImage,
-environment variable should be set in Docker-Compose/Docker Container
+### `npm run start`
+- officially start command for dockerImage,
+- environment variable should be set in Docker-Compose/Docker Container
 
 
 ## environment variable

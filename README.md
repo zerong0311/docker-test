@@ -8,8 +8,9 @@ this project split to three parts
 ## Description
 ### 1. nodejs rest API
 - directory : ./nodejs/
-- please read nodejs/README.md
-- Travis-CI are setup for automated test and docker image build & push
+- for more details,please read ./nodejs/README.md
+- Travis-CI are setup for automated test
+- Travis-CI will also auto build docker image push to docker hub after the automated test passed
 
 ### 2. MYSQL Database
 - directory : ./data/
