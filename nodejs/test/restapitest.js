@@ -3,6 +3,7 @@ const supertest = require('supertest');
 // const api = supertest('node-load-balancer-1379515656.ap-northeast-1.elb.amazonaws.com:8080'); 
 const api = supertest('localhos:8080'); 
 const app = require('../app.js');
+const e = require('express');
 
 
 // template of success data 
@@ -171,21 +172,36 @@ describe('GET/orders?page=:page&limit=:limit', () => {
 
 
 
-describe('create order=>get order=>take order=>get order', () => {
-    it("create order", (done) => {
+describe('create order=>get order=>take order=>get order', async () => {
+    let orderId;
+    await it("create order", (done) => {
         supertest(app).post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200).end((err, res) => {
             if(err) done(err);
-            console.log(`res.text ${res.text}`);
-            let orderId = res.text.id;           
+            else{
+                console.log(`res.text ${res.text}`);
+                orderId = res.text.id;    
+                done();       
+            }
+        });
+    });
 
-            it(`select top 1000 data`, (done) => {
-                supertest(app).get("/orders?page=1&limit=100").send().expect(200).end((err, res) => {
-                    if(err) done(err);
+    await it(`select top 1000 data`, (done) => {
+        supertest(app).get("/orders?page=1&limit=100").send().expect(200).end((err, res) => {
+            if(err) done(err);
+            else{
+                console.log(`top1000 ${res.text}`);
+                done();
+            }
+        });
+    });
 
-                    console.log(`getlist ${res.text}`);
-                    done();
-                });
-            });
+    await it(`take order`, (done) => {
+        supertest(app).patch(`/orders/${orderId}`).send({"status":"TAKEN"}).expect(200).end((err, res) => {
+            if(err) done(err);
+            else{
+                console.log(`take order ${res.text}`);
+                done();
+            }
         });
     });
 });
