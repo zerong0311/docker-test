@@ -27,8 +27,6 @@ async function requestDistance(START_LATITUDE,START_LONGITUDE,END_LATITUDE,END_L
             });
         }
     })
-    console.log(`output distance ${returnResult}`);
-
     return returnResult;
 }
 

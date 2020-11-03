@@ -169,14 +169,15 @@ describe('GET/orders?page=:page&limit=:limit', () => {
 
 
 describe('create order=>get order=>take order=>get order', () => {
-    it("correct origin & destination 1", (done) => {
+    this.timeout(60000);
+    it("create order", (done) => {
         supertest(app).post("/orders").send( {"origin":["-33.86748","150.20699"],"destination":["-32.86748","150.20699"]} ).expect(200).end((err, res) => {
             if(err) done(err);
             console.log(`res.text ${res.text}`);
             let orderId = res.text.id;           
 
-            it(`select data form get order include orderid=${orderId}`, (done) => {
-                supertest(app).get("/orders?page=1&limit=1000").send().expect(200).end((err, res) => {
+            it(`select top 1000 data`, (done) => {
+                supertest(app).get("/orders?page=1&limit=100").send().expect(200).end((err, res) => {
                     if(err) done(err);
 
                     console.log(`getlist ${res.text}`);
