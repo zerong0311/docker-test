@@ -8,9 +8,9 @@ const app = express();
 // Allow Cross-Origin requests
 app.use(cors());
 
-//defined format
+//defined format &
 app.use(express.urlencoded({extended:false}));
-app.use(express.json());
+app.use(express.json({ limit: '1MB' }));
 
 // Routes
 app.use('/', orderRoutes);
