@@ -4,16 +4,16 @@ services:
   nodejs:
     image: zerongjob/docket-test:latest
     environment:
-      DBHOST: lala-db
+      DBHOST: ordersample-mysql
       DBUSER: root
       DBPASSWORD: dbpassword
-      DBNAME: LALAMOVE
+      DBNAME: ZERONGJOB
       GOOGLEMAPAPIKEY : AIzaSyClfFPTSCVamqtUP4Lj4RQ93RtcIbVWNwk
       PORT: 8080
     ports:
       - 8080:8080
 
-  lala-db:
+  ordersample-mysql:
     image: mysql:5.7
     restart: always
     environment:

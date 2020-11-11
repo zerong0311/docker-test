@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.22, for macos10.15 (x86_64)
 --
--- Host: mydbinstance.cyrmt910qp5q.ap-northeast-1.rds.amazonaws.com    Database: LALAMOVE
+-- Host: mydbinstance.cyrmt910qp5q.ap-northeast-1.rds.amazonaws.com    Database: ZERONGJOB
 -- ------------------------------------------------------
 -- Server version	8.0.20
 
