@@ -4,12 +4,12 @@ services:
   nodejs:
     image: zerongjob/docket-test:latest
     environment:
-      NODE_ENV: production
       DBHOST: lala-db
       DBUSER: root
       DBPASSWORD: dbpassword
       DBNAME: LALAMOVE
       GOOGLEMAPAPIKEY : AIzaSyClfFPTSCVamqtUP4Lj4RQ93RtcIbVWNwk
+      PORT: 8080
     ports:
       - 8080:8080
 
