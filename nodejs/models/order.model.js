@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const order = sequelize.define("lala_order", {
+    const order = sequelize.define("order_table", {
       order_id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
